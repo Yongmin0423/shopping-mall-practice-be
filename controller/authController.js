@@ -3,19 +3,20 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const postLogin = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res
-      .status(400)
-      .json({ status: "fail", message: "Can't not find this user." });
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (user) {
+      const ok = await bcrypt.compare(password, user.password);
+      if (ok) {
+        const token = user.generateToken();
+        return res.status(200).json({ status: "success", user, token });
+      }
+    }
+    throw new Error("invalid email or password");
+  } catch (error) {
+    res.status(400).json({ status: "fail", error: error.message });
   }
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) {
-    return res.status(400).json({ status: "fail", message: "Wrong password" });
-  }
-  const token = user.generateToken();
-  return res.status(200).json({ status: "success", user, token });
 };
 
 //유저 token의 유효성을 검사하는 함수. 이 미들웨어로 req.userId를 추가할 수 있음
