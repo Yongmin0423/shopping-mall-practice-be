@@ -13,18 +13,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/api", apiRouter);
-const mongoURI = process.env.LOCAL_DB_ADDRESS;
+const mongoURI = process.env.MONGODB_URI_PROD;
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(mongoURI);
-    console.log("mongoose connected");
-  } catch (error) {
-    console.log("mongoose connection fail", error);
-  }
-};
-connectDB();
-
-app.listen(process.env.PORT || 4400, () => {
-  console.log("server on 4400");
+mongoose
+  .connect(mongoURI)
+  .then(() => console.log("Mongoose connected"))
+  .catch((err) => console.log("DB connection fail", err));
+const PORT = process.env.PORT || 4400;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
