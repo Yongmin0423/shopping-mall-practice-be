@@ -9,6 +9,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors());
+app.options("*", cors()); // 모든 경로에 대해 OPTIONS 요청 허용
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -20,6 +21,6 @@ mongoose
   .then(() => console.log("Mongoose connected"))
   .catch((err) => console.log("DB connection fail", err));
 const PORT = process.env.PORT || 4400;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+aapp.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on port ${PORT}`);
 });

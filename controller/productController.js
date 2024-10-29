@@ -4,21 +4,11 @@ const PAGE_SIZE = 1;
 
 export const postProduct = async (req, res) => {
   try {
-    const {
-      sku,
-      name,
-      size,
-      image,
-      category,
-      description,
-      price,
-      stock,
-      status,
-    } = req.body;
+    const { sku, name, image, category, description, price, stock, status } =
+      req.body;
     const newProduct = await Product.create({
       sku,
       name,
-      size,
       image,
       category,
       description,
