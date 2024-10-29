@@ -37,3 +37,13 @@ export const authenticate = async (req, res, next) => {
     return res.status(400).json({ status: "fail", message: error.message });
   }
 };
+
+export const checkAdimPermission = async (req, res, next) => {
+  try {
+    const { userId } = req;
+    const user = await User.findById(userId);
+    if (user.level !== "admin") throw new Error("no permission");
+  } catch (error) {
+    return res.status(400).json({ status: "fail", error: error.message });
+  }
+};
